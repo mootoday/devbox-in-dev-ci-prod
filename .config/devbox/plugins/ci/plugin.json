@@ -1,0 +1,14 @@
+{
+  "name": "ci",
+  "version": "0.0.1",
+  "description": "The CI environment plugin.",
+  "packages": [],
+	"create_files": {
+    "{{ .Virtenv }}/init_hook.sh": "./init_hook.sh"
+  },
+  "shell": {
+    "init_hook": [
+      "sh {{ .Virtenv }}/init_hook.sh"
+    ]
+  }
+}

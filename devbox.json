@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/0.10.2/.schema/devbox.schema.json",
+  "include": [
+    "path:./.config/devbox/plugins/prod/plugin.json",
+    "path:./.config/devbox/plugins/ci/plugin.json",
+    "path:./.config/devbox/plugins/dev/plugin.json"
+  ],
+  "packages": ["nodejs@latest"],
+  "shell": {
+    "init_hook": [
+      "echo 'Hello from the Devbox root init_hook'"
+    ],
+    "scripts": {
+      "start": [
+        "node src/server.mjs"
+      ]
+    }
+  }
+}
