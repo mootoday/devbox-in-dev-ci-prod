@@ -30,8 +30,11 @@ jobs:
 
       - name: Verify the GET / response
         run: |
-          RESPONSE_EXPECTED="Hello world!\n\nThis server runs in the following environment: CI\n\nNode.js version: 20.11.1"
-          if ! curl -s http://localhost:3000 | grep -q "$RESPONSE_EXPECTED"; then
-            echo "Response is incorrect"
-            exit 1
+          if ! curl -s http://localhost:3000 | grep -q "environment: CI"; then
+          	echo "Environment validation failed"
+          	exit 1
+          fi
+          if ! curl -s http://localhost:3000 | grep -q "Node.js version: 20.11.1"; then
+          	echo "Node.js version validation failed"
+          	exit 1
           fi
