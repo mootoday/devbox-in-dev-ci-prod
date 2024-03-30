@@ -1,0 +1,32 @@
+name: Testing with devbox
+
+on: push
+
+jobs:
+  test_container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            CI=true
+          load: true
+          push: false
+          tags: devbox-dev-ci-prod
+
+      - name: Start Docker container
+        run: |
+          docker run -d -p 3000:3000 devbox-dev-ci-prod
+          while ! nc -z localhost 3000; do sleep 1; done
+          curl -s http://localhost:3000
+          RESPONSE_EXPECTED="Hello world!\n\nThis server runs in the following environment: CI\n\nNode.js version: 20.11.1"
+          if ! curl -s http://localhost:3000 | grep -q "$RESPONSE_EXPECTED"; then
+            echo "Response is incorrect"
+            exit 1
+          fi
