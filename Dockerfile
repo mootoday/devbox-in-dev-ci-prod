@@ -1,8 +1,9 @@
 FROM jetpackio/devbox:latest
 
+ARG CI
+ENV CI=${CI:-""}
 ARG PROD
 ENV PROD=${PROD:-""}
-
 
 # Installing your devbox project
 USER root:root

@@ -1,0 +1,40 @@
+name: Testing with devbox
+
+on: push
+
+jobs:
+  test_container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          build-args: |
+            CI=true
+          load: true
+          push: false
+          tags: devbox-dev-ci-prod
+
+      - name: Start Docker container
+        run: |
+          docker run -d -p 3000:3000 devbox-dev-ci-prod
+          while ! curl -sf -o /dev/null http://localhost:3000; do sleep 1; done
+
+      - name: Print the GET / response
+        run: curl -v http://localhost:3000
+
+      - name: Verify the GET / response
+        run: |
+          if ! curl -s http://localhost:3000 | grep -q "environment: CI"; then
+          	echo "Environment validation failed"
+          	exit 1
+          fi
+          if ! curl -s http://localhost:3000 | grep -q "Node.js version: 20.11.1"; then
+          	echo "Node.js version validation failed"
+          	exit 1
+          fi
