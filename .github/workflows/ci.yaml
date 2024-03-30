@@ -24,7 +24,12 @@ jobs:
         run: |
           docker run -d -p 3000:3000 devbox-dev-ci-prod
           while ! nc -z localhost 3000; do sleep 1; done
-          curl -s http://localhost:3000
+
+      - name: Print the GET / response
+        run: curl -v http://localhost:3000
+
+      - name: Verify the GET / response
+        run: |
           RESPONSE_EXPECTED="Hello world!\n\nThis server runs in the following environment: CI\n\nNode.js version: 20.11.1"
           if ! curl -s http://localhost:3000 | grep -q "$RESPONSE_EXPECTED"; then
             echo "Response is incorrect"
