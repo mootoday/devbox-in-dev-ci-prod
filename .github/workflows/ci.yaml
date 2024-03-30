@@ -23,7 +23,7 @@ jobs:
       - name: Start Docker container
         run: |
           docker run -d -p 3000:3000 devbox-dev-ci-prod
-          while ! nc -z localhost 3000; do sleep 1; done
+          while ! curl -sf -o /dev/null http://localhost:3000; do sleep 1; done
 
       - name: Print the GET / response
         run: curl -v http://localhost:3000
